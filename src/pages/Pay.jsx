@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import StripeCheckout from 'react-stripe-checkout';
 
 
 const Pay = () => {
   const [token, setstripeToken] = useState(null);
-  const [ amount, setAmount ] = useState(100);
+  const [ amount, setAmount ] = useState(150);
+   const navigate=useNavigate()
+
   const onToken = (token) => {
     
      setstripeToken(token);
@@ -24,6 +27,8 @@ const Pay = () => {
             headers:{'Content-Type': 'application/json'}
           });
         console.log(res.data);
+        navigate('/success')
+
       } catch (err) {
           console.log(err);
       }
@@ -42,6 +47,8 @@ const Pay = () => {
         justifyContent: 'center',
       }}
     >
+      {token ?(<span> Processing, Please Wait .....</span>):(
+
       <StripeCheckout
         // ==========================================================
         stripeKey={process.env.REACT_APP_STRIPE_KEY || ""}
@@ -61,7 +68,7 @@ const Pay = () => {
           style={{
             border: 'none',
             width: 120,
-            borderRadius: 5,
+            borderRadius: 5, 
             padding: '20px',
             backgroundColor: 'black',
             color: 'white',
@@ -72,6 +79,7 @@ const Pay = () => {
           Pay Now
         </button>
       </StripeCheckout>
+      )}
     </div>
   );
 };
